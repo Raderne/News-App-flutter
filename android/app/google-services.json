@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "962014638929",
+    "project_id": "haber-app-flutter",
+    "storage_bucket": "haber-app-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962014638929:android:54f1e1aebc2d2da5135970",
+        "android_client_info": {
+          "package_name": "com.haber.haber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1LmksDvoY8U4Y4PNrTEOxj32Usknw5AU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

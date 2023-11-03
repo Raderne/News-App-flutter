@@ -1,9 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:haber/constants/routes.dart';
+import 'package:haber/firebase_options.dart';
 import 'package:haber/pages/home_page.dart';
 import 'package:haber/pages/landing_page.dart';
+import 'package:haber/pages/saved_articles.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -16,6 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         homeRoute: (context) => const HomePage(),
+        bookmarkRoute: (context) => const SavedArticlesPage(),
       },
       home: const LandingPage(),
       theme: ThemeData(

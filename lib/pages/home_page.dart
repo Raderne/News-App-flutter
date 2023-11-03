@@ -9,6 +9,7 @@ import 'package:haber/services/category_data.dart';
 import 'package:haber/services/top_headlines_data.dart';
 import 'package:haber/views/bottom_news_tile.dart';
 import 'package:haber/views/category_tile.dart';
+import 'package:haber/widgets/floating_appbar.dart';
 import 'package:haber/widgets/indicator.dart';
 import 'package:haber/widgets/slider.dart';
 
@@ -133,6 +134,8 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: IconButton(
                             onPressed: () {
+                              if (_searchController.text.isEmpty) return;
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -250,6 +253,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+      floatingActionButton: const FloatingBottomAppBar(
+        isBookmark: false,
+        isHome: true,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
