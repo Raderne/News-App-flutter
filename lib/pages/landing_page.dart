@@ -9,56 +9,55 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.asset(
-          "assets/images/newspaperbg.jpg",
-          height: MediaQuery.of(context).size.height,
-          fit: BoxFit.cover,
-        ),
         Container(
           decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/newspaperbg.jpg"),
+                fit: BoxFit.cover),
+          ),
+        ),
+        // gradient
+        Container(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
               colors: [
-                Colors.black,
                 Colors.transparent,
+                Colors.black.withOpacity(0.7),
               ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
         ),
-        Container(
-          margin:
-              EdgeInsets.only(top: MediaQuery.of(context).size.height / 1.8),
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const Text(
-                "   İlk günden\nhaberdar olun",
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.white,
-                  fontFamily: "Nunito-Black",
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  "   İlk günden\nhaberdar olun",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Kusursuz Haber Uygulamamızla\n  en son Haberleri keşfedin",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: textLightClr,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              const SizedBox(height: 60),
-              Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: secondaryClr,
+                const Text(
+                  "Kusursuz Haber Uygulamamızla\n      en son Haberleri keşfedin",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: "Nunito",
+                  ),
                 ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: ElevatedButton(
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
@@ -68,17 +67,26 @@ class LandingPage extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: secondaryClr,
-                    foregroundColor: Colors.white,
-                    elevation: 0.0,
-                    textStyle: const TextStyle(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 100, vertical: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    "Başlayalım",
+                    style: TextStyle(
+                      color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: const Text("Başlayalım"),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 70,
+                ),
+              ],
+            ),
           ),
         ),
       ],
