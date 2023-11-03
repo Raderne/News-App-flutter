@@ -28,6 +28,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Stack(
           children: [
             Hero(
@@ -49,7 +50,6 @@ class _ArticleDetailsState extends State<ArticleDetails> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 60),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
