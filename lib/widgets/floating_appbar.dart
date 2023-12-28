@@ -5,8 +5,13 @@ import 'package:haber/constants/routes.dart';
 class FloatingBottomAppBar extends StatelessWidget {
   final bool isHome;
   final bool isBookmark;
-  const FloatingBottomAppBar(
-      {super.key, required this.isHome, required this.isBookmark});
+  final bool isProfilePage;
+  const FloatingBottomAppBar({
+    super.key,
+    required this.isHome,
+    required this.isBookmark,
+    required this.isProfilePage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +79,32 @@ class FloatingBottomAppBar extends StatelessWidget {
                 'Bookmark',
                 style: TextStyle(
                   color: isBookmark ? primaryClr : Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              IconButton(
+                onPressed: () {
+                  if (isProfilePage) return;
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    profileRoute,
+                    (route) => false,
+                  );
+                },
+                icon: Icon(
+                  Icons.person,
+                  color: isProfilePage ? secondaryDarkBlueClr : Colors.black,
+                ),
+              ),
+              Text(
+                'Profile',
+                style: TextStyle(
+                  color: isProfilePage ? secondaryDarkBlueClr : Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),

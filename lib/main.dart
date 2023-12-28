@@ -4,6 +4,9 @@ import 'package:haber/constants/routes.dart';
 import 'package:haber/firebase_options.dart';
 import 'package:haber/pages/home_page.dart';
 import 'package:haber/pages/landing_page.dart';
+import 'package:haber/pages/login_page.dart';
+import 'package:haber/pages/profile_page.dart';
+import 'package:haber/pages/register_page.dart';
 import 'package:haber/pages/saved_articles.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -26,6 +29,9 @@ class MyApp extends StatelessWidget {
       routes: {
         homeRoute: (context) => const HomePage(),
         bookmarkRoute: (context) => const SavedArticlesPage(),
+        profileRoute: (context) => const ProfilePage(),
+        loginRoute: (context) => const LoginPage(),
+        registerRoute: (context) => const RegisterPage(),
       },
       home: const LandingPage(),
       theme: ThemeData(

@@ -95,6 +95,7 @@ class _SavedArticlesPageState extends State<SavedArticlesPage> {
       floatingActionButton: const FloatingBottomAppBar(
         isHome: false,
         isBookmark: true,
+        isProfilePage: false,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

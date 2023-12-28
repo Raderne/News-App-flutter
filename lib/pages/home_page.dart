@@ -256,6 +256,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const FloatingBottomAppBar(
         isBookmark: false,
         isHome: true,
+        isProfilePage: false,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
