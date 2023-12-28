@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:haber/constants/colors.dart';
 import 'package:haber/constants/routes.dart';
@@ -12,8 +10,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -29,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.54,
+          height: MediaQuery.of(context).size.height * 0.53,
           decoration: BoxDecoration(
             color: const Color(0xffF5F5F5),
             borderRadius: const BorderRadius.all(
@@ -49,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'GİRİŞ',
                 style: TextStyle(
                   color: secondaryDarkBlueClr,
@@ -74,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         hintText: 'E-posta',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           color: Colors.black54,
                           fontFamily: "Nunito-Regular",
                           fontSize: 20,
@@ -98,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: 'Şifre',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           color: Colors.black54,
                           fontFamily: "Nunito-Regular",
                           fontSize: 20,
@@ -121,7 +126,26 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 40),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_emailController.text.isNotEmpty &&
+                      _passwordController.text.isNotEmpty) {
+                    // TODO: Login process here
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Lütfen boş alan bırakmayınız.'),
+                        margin: EdgeInsets.all(20),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
                 style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all(const Size(240, 60)),
                   backgroundColor:
@@ -142,11 +166,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Hesabınız yok mu?',
                     style: TextStyle(
                       color: Colors.black,
