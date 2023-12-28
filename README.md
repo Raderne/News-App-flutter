@@ -56,7 +56,3 @@ Make sure you have Flutter installed on your machine. If not, follow the [offici
 ## Contributing
 
 Contributions are welcome! If you find a bug or have a feature suggestion, please open an issue. Pull requests are also appreciated.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
