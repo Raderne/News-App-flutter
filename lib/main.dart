@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:haber/constants/routes.dart';
 import 'package:haber/firebase_options.dart';
+import 'package:haber/pages/add_article_page.dart';
 import 'package:haber/pages/home_page.dart';
 import 'package:haber/pages/landing_page.dart';
 import 'package:haber/pages/login_page.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         profileRoute: (context) => const ProfilePage(),
         loginRoute: (context) => const LoginPage(),
         registerRoute: (context) => const RegisterPage(),
+        addArticleRoute: (context) => const AddArticlePage(),
       },
       home: const LandingPage(),
       theme: ThemeData(

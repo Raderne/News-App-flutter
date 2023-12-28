@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haber/widgets/floating_appbar.dart';
+import 'package:haber/widgets/profile_logged_in.dart';
 
 import 'package:haber/widgets/profile_main_page.dart';
 
@@ -14,7 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: ProfileMainPage(),
+      body: ProfileLoggedInPage(),
       floatingActionButton: FloatingBottomAppBar(
         isHome: false,
         isBookmark: false,

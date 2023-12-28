@@ -5,3 +5,4 @@ const bookmarkRoute = "/bookmark";
 const profileRoute = "/profile";
 const loginRoute = "/login";
 const registerRoute = "/register";
+const addArticleRoute = "/addArticle";
