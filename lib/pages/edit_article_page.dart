@@ -7,55 +7,79 @@ import 'package:haber/services/article_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const List<String> categories = categoriesList;
-class AddArticlePage extends StatefulWidget {
-  const AddArticlePage({super.key});
+
+class EditArticlePage extends StatefulWidget {
+  final String? id;
+  final String? author;
+  final String? title;
+  final String? description;
+  final String? content;
+  final String? url;
+  final String? category;
+
+  const EditArticlePage({
+    super.key,
+    this.id,
+    this.author,
+    this.title,
+    this.description,
+    this.content,
+    this.url,
+    this.category,
+  });
 
   @override
-  State<AddArticlePage> createState() => _AddArticlePageState();
+  State<EditArticlePage> createState() => _EditArticlePageState();
 }
 
-class _AddArticlePageState extends State<AddArticlePage> {
+class _EditArticlePageState extends State<EditArticlePage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _contentController;
-  late TextEditingController _UrlController;
+  late TextEditingController _urlController;
 
-  String dropdownValue = categories.first;
-
+  late String _dropdownValue;
   ArticleModel article = ArticleModel();
 
   @override
   void initState() {
-    _titleController = TextEditingController();
-    _descriptionController = TextEditingController();
-    _contentController = TextEditingController();
-    _UrlController = TextEditingController();
-
     super.initState();
+    _titleController = TextEditingController(text: widget.title);
+    _descriptionController = TextEditingController(text: widget.description);
+    _contentController = TextEditingController(text: widget.content);
+    _urlController = TextEditingController(text: widget.url);
+
+    _dropdownValue = widget.category!;
   }
 
-  createArticle(String title, String description, String content, String url,
-      String category) async {
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _contentController.dispose();
+    _urlController.dispose();
+  }
+
+  updateArticle(
+    String id,
+    String title,
+    String description,
+    String content,
+    String url,
+    String category,
+  ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString('token') ?? '';
     ArticleService articleService = ArticleService(token);
-    article = await articleService.createArticle(
+    article = await articleService.updateArticle(
+      id,
       title,
       description,
       content,
       url,
       category,
     );
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    _contentController.dispose();
-    _UrlController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -86,7 +110,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
           child: ListView(
             children: [
               const Text(
-                'Makale Ekle',
+                'Makaleyi Düzenle',
                 style: TextStyle(
                   color: secondaryDarkBlueClr,
                   fontFamily: "Nunito-Black",
@@ -186,7 +210,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                     ),
                     const SizedBox(height: 20),
                     TextField(
-                      controller: _UrlController,
+                      controller: _urlController,
                       decoration: InputDecoration(
                         hintText: 'Makale URL',
                         hintStyle: const TextStyle(
@@ -210,7 +234,6 @@ class _AddArticlePageState extends State<AddArticlePage> {
                     const SizedBox(height: 20),
                     DropdownMenu(
                       width: MediaQuery.of(context).size.width * 0.8,
-                      initialSelection: categories.first,
                       dropdownMenuEntries: [
                         for (final category in categories)
                           DropdownMenuEntry(
@@ -218,6 +241,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                             label: category,
                           ),
                       ],
+                      initialSelection: _dropdownValue,
                       menuStyle: MenuStyle(
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
@@ -230,29 +254,32 @@ class _AddArticlePageState extends State<AddArticlePage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      onSelected: (value) => setState(() {
+                        _dropdownValue = value!;
+                      }),
                     ),
                     const SizedBox(height: 40),
                     TextButton(
                       onPressed: () async {
-                        await createArticle(
+                        await updateArticle(
+                          widget.id!,
                           _titleController.text,
                           _descriptionController.text,
                           _contentController.text,
-                          _UrlController.text,
-                          dropdownValue,
+                          _urlController.text,
+                          _dropdownValue,
                         );
 
                         _titleController.clear();
                         _descriptionController.clear();
                         _contentController.clear();
-                        _UrlController.clear();
-                        dropdownValue = categories.first;
+                        _urlController.clear();
 
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Makale Eklendi.',
+                              'MAKALE BAŞARIYLA GÜNCELLENDİ.',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -269,6 +296,8 @@ class _AddArticlePageState extends State<AddArticlePage> {
                             ),
                           ),
                         );
+
+                        Navigator.popAndPushNamed(context, profileRoute);
                       },
                       style: ButtonStyle(
                         fixedSize:
@@ -282,7 +311,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                         ),
                       ),
                       child: const Text(
-                        'Makale Ekle',
+                        'MAKALEYİ GÜNCELLE',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

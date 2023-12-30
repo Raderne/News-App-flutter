@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:haber/pages/article_details.dart';
+import 'package:haber/pages/edit_article_page.dart';
 
 typedef OnDelete = void Function();
 
@@ -104,7 +103,19 @@ class ArticleCard extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                // TODO: Edit article
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditArticlePage(
+                      id: id!,
+                      title: title!,
+                      description: description!,
+                      content: content!,
+                      url: url!,
+                      category: category!,
+                    ),
+                  ),
+                );
               },
               icon: Icon(
                 Icons.edit_outlined,

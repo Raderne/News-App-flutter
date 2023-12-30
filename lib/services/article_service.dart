@@ -90,7 +90,7 @@ class ArticleService {
     String url,
     String category,
   ) async {
-    final response = await client.put(
+    final response = await client.patch(
       Uri.parse('$baseUrl/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
