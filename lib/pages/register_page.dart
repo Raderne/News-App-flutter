@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:haber/constants/colors.dart';
 import 'package:haber/constants/routes.dart';
+import 'package:haber/models/user_model.dart';
+import 'package:haber/pages/login_page.dart';
+import 'package:haber/services/auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,6 +17,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController _userLastNameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+
+  UserModel? _user;
 
   @override
   void initState() {
@@ -33,6 +38,20 @@ class _RegisterPageState extends State<RegisterPage> {
     _passwordController.dispose();
 
     super.dispose();
+  }
+
+  register(String name, String lastName, String email, String password) async {
+    AuthService authService = AuthService();
+    UserModel user = await authService.register(
+      name,
+      lastName,
+      email,
+      password,
+    );
+
+    setState(() {
+      _user = user;
+    });
   }
 
   @override
@@ -129,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
+              keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             TextField(
@@ -156,12 +176,72 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             const SizedBox(height: 40),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_userNameController.text.isNotEmpty &&
                     _userLastNameController.text.isNotEmpty &&
                     _emailController.text.isNotEmpty &&
                     _passwordController.text.isNotEmpty) {
-                  Navigator.popAndPushNamed(context, loginRoute);
+                  await register(
+                    _userNameController.text,
+                    _userLastNameController.text,
+                    _emailController.text,
+                    _passwordController.text,
+                  );
+
+                  if (_user != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Kayıt başarılı.',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: "Nunito-Regular",
+                          ),
+                        ),
+                        margin: EdgeInsets.all(20),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                      ),
+                    );
+
+                    // ignore: use_build_context_synchronously
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(
+                          email: _user!.email,
+                        ),
+                      ),
+                      (route) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Kayıt başarısız.',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: "Nunito-Regular",
+                          ),
+                        ),
+                        margin: EdgeInsets.all(20),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

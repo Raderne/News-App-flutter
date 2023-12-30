@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:haber/constants/colors.dart';
 import 'package:haber/constants/routes.dart';
+import 'package:haber/models/user_model.dart';
+import 'package:haber/services/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String? email;
+  const LoginPage({super.key, this.email});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -13,10 +17,17 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
 
+  UserModel? _user;
+
   @override
   void initState() {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+
+    if (widget.email != null) {
+      _emailController.text = widget.email!;
+    }
+
     super.initState();
   }
 
@@ -25,6 +36,15 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  login(String email, String password) async {
+    AuthService authService = AuthService();
+    UserModel user = await authService.login(email, password);
+
+    setState(() {
+      _user = user;
+    });
   }
 
   @override
@@ -96,6 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -127,10 +149,20 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 40),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_emailController.text.isNotEmpty &&
                       _passwordController.text.isNotEmpty) {
-                    // TODO: Login process here
+                    await login(
+                        _emailController.text, _passwordController.text);
+
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('token', _user!.token!);
+                    prefs.setString('name', _user!.name!);
+                    prefs.setString('lastName', _user!.lastName!);
+                    prefs.setString('email', _user!.email!);
+
+                    Navigator.pushNamed(context, profileRoute);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

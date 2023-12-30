@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:haber/constants/colors.dart';
+import 'package:haber/constants/routes.dart';
+import 'package:haber/models/article_model.dart';
+import 'package:haber/services/article_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const List<String> categories = [
   'Spor',
@@ -33,6 +37,8 @@ class _AddArticlePageState extends State<AddArticlePage> {
 
   String dropdownValue = categories.first;
 
+  ArticleModel article = ArticleModel();
+
   @override
   void initState() {
     _titleController = TextEditingController();
@@ -41,6 +47,20 @@ class _AddArticlePageState extends State<AddArticlePage> {
     _UrlController = TextEditingController();
 
     super.initState();
+  }
+
+  createArticle(String title, String description, String content, String url,
+      String category) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token') ?? '';
+    ArticleService articleService = ArticleService(token);
+    article = await articleService.createArticle(
+      title,
+      description,
+      content,
+      url,
+      category,
+    );
   }
 
   @override
@@ -60,7 +80,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.85,
           decoration: BoxDecoration(
             color: const Color(0xffF5F5F5),
             borderRadius: const BorderRadius.all(
@@ -78,7 +98,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
               width: 1,
             ),
           ),
-          child: Column(
+          child: ListView(
             children: [
               const Text(
                 'Makale Ekle',
@@ -122,6 +142,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                           ),
                         ),
                       ),
+                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -145,6 +166,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                           ),
                         ),
                       ),
+                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
@@ -226,8 +248,41 @@ class _AddArticlePageState extends State<AddArticlePage> {
                     ),
                     const SizedBox(height: 40),
                     TextButton(
-                      onPressed: () {
-                        // TODO: Add article process here
+                      onPressed: () async {
+                        await createArticle(
+                          _titleController.text,
+                          _descriptionController.text,
+                          _contentController.text,
+                          _UrlController.text,
+                          dropdownValue,
+                        );
+
+                        _titleController.clear();
+                        _descriptionController.clear();
+                        _contentController.clear();
+                        _UrlController.clear();
+                        dropdownValue = categories.first;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Makale Eklendi.',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: "Nunito-Regular",
+                              ),
+                            ),
+                            margin: EdgeInsets.all(20),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                            ),
+                          ),
+                        );
                       },
                       style: ButtonStyle(
                         fixedSize:
@@ -253,7 +308,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                     SizedBox(height: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, profileRoute);
                       },
                       style: ButtonStyle(
                         fixedSize:
