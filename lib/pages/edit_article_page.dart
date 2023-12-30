@@ -112,7 +112,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
               const Text(
                 'Makaleyi Düzenle',
                 style: TextStyle(
-                  color: secondaryDarkBlueClr,
+                  color: primaryClr,
                   fontFamily: "Nunito-Black",
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -302,8 +302,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
                       style: ButtonStyle(
                         fixedSize:
                             MaterialStateProperty.all(const Size(240, 45)),
-                        backgroundColor:
-                            MaterialStateProperty.all(secondaryDarkBlueClr),
+                        backgroundColor: MaterialStateProperty.all(primaryClr),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),

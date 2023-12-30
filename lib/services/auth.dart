@@ -5,7 +5,6 @@ import 'package:haber/models/user_model.dart';
 import 'package:http/io_client.dart';
 
 class MyClient extends http.BaseClient {
-  final http.Client _inner = http.Client();
 
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     HttpClient httpClient = new HttpClient()
