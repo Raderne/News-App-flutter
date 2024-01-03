@@ -99,6 +99,8 @@ class _ProfileLoggedInPageState extends State<ProfileLoggedInPage> {
                 TextButton(
                   onPressed: () async {
                     await logout();
+
+                    if (!context.mounted) return;
                     Navigator.popAndPushNamed(context, profileRoute);
                   },
                   style: ButtonStyle(
@@ -244,6 +246,7 @@ class _ProfileLoggedInPageState extends State<ProfileLoggedInPage> {
                         String? description = articles[index].description;
                         String? content = articles[index].content;
                         String? url = articles[index].url;
+                        String? image = articles[index].img;
                         String? category = articles[index].category;
 
                         return ArticleCard(
@@ -253,6 +256,7 @@ class _ProfileLoggedInPageState extends State<ProfileLoggedInPage> {
                           description: description,
                           content: content,
                           url: url,
+                          image: image,
                           category: category,
                           index: index,
                           onDelete: () async {

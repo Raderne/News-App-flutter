@@ -5,7 +5,6 @@ import 'package:http/io_client.dart';
 import 'package:haber/models/article_model.dart';
 
 class MyClient extends http.BaseClient {
-
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     HttpClient httpClient = new HttpClient()
       ..badCertificateCallback =
@@ -26,7 +25,7 @@ class ArticleService {
     _token = token;
   }
 
-  String baseUrl = 'https://192.168.1.102:5000/api/articles';
+  String baseUrl = 'https://10.4.10.159:5000/api/articles';
   List<ArticleModel> articles = [];
   http.Client client = MyClient();
 
@@ -54,6 +53,7 @@ class ArticleService {
     String description,
     String content,
     String url,
+    String img,
     String category,
   ) async {
     final response = await client.post(
@@ -67,7 +67,7 @@ class ArticleService {
         'description': description,
         'content': content,
         'url': url,
-        'img': '',
+        'img': img,
         'category': category,
       }),
     );
@@ -85,6 +85,7 @@ class ArticleService {
     String description,
     String content,
     String url,
+    String img,
     String category,
   ) async {
     final response = await client.patch(
@@ -98,7 +99,7 @@ class ArticleService {
         'description': description,
         'content': content,
         'url': url,
-        'img': '',
+        'img': img,
         'category': category,
       }),
     );

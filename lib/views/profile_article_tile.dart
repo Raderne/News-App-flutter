@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:haber/pages/article_details.dart';
 import 'package:haber/pages/edit_article_page.dart';
@@ -11,6 +13,7 @@ class ArticleCard extends StatelessWidget {
   final String? description;
   final String? content;
   final String? url;
+  final String? image;
   final String? category;
   final int? index;
 
@@ -23,6 +26,7 @@ class ArticleCard extends StatelessWidget {
     this.description,
     this.content,
     this.url,
+    this.image,
     this.category,
     this.index,
     this.id,
@@ -50,7 +54,6 @@ class ArticleCard extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -62,96 +65,133 @@ class ArticleCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
+        child: Stack(
           children: [
-            Text(
-              (index! + 1).toString(),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 40,
-                fontFamily: 'Nunito-Black',
-                fontWeight: FontWeight.bold,
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: FileImage(File(image!)),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Container(
+              height: 150,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                gradient: const LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black,
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              height: 150,
+              width: MediaQuery.of(context).size.width,
+              child: Row(
                 children: [
                   Text(
-                    title!,
+                    (index! + 1).toString(),
                     style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
+                      color: Colors.white,
+                      fontSize: 40,
                       fontFamily: 'Nunito-Black',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    author!,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'Nunito-Regular',
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          title!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontFamily: 'Nunito-Black',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          author!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: 'Nunito-Regular',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditArticlePage(
+                            id: id!,
+                            title: title!,
+                            description: description!,
+                            content: content!,
+                            url: url!,
+                            image: image!,
+                            category: category!,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: Colors.green[200],
+                      size: 50,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: () {
+                      onDelete();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Makale Silindi.',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: "Nunito-Regular",
+                            ),
+                          ),
+                          margin: EdgeInsets.all(20),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Colors.red[200],
+                      size: 50,
+                    ),
                   ),
                 ],
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditArticlePage(
-                      id: id!,
-                      title: title!,
-                      description: description!,
-                      content: content!,
-                      url: url!,
-                      category: category!,
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.edit_outlined,
-                color: Colors.green[900],
-                size: 40,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                onDelete();
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Makale Silindi.',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: "Nunito-Regular",
-                      ),
-                    ),
-                    margin: EdgeInsets.all(20),
-                    behavior: SnackBarBehavior.floating,
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.delete_outline,
-                color: Colors.red[900],
-                size: 40,
               ),
             ),
           ],

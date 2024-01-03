@@ -10,7 +10,7 @@ class BottomNewsData {
   Future<void> getNews(String category) async {
     String url =
         "https://newsapi.org/v2/top-headlines?country=us&category=$category&pageSize=15&apiKey=${dotenv.env['API_KEY']}";
-    
+
     var response = await http.get(Uri.parse(url));
     var jsonData = jsonDecode(response.body);
 

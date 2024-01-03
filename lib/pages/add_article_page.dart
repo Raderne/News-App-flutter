@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:haber/constants/categories.dart';
 import 'package:haber/constants/colors.dart';
@@ -5,8 +8,10 @@ import 'package:haber/constants/routes.dart';
 import 'package:haber/models/article_model.dart';
 import 'package:haber/services/article_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 const List<String> categories = categoriesList;
+
 class AddArticlePage extends StatefulWidget {
   const AddArticlePage({super.key});
 
@@ -18,24 +23,37 @@ class _AddArticlePageState extends State<AddArticlePage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _contentController;
-  late TextEditingController _UrlController;
+  late TextEditingController _urlController;
 
   String dropdownValue = categories.first;
+  String _img = '';
 
   ArticleModel article = ArticleModel();
+
+  Future<XFile?> getImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    return image;
+  }
 
   @override
   void initState() {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
     _contentController = TextEditingController();
-    _UrlController = TextEditingController();
+    _urlController = TextEditingController();
 
     super.initState();
   }
 
-  createArticle(String title, String description, String content, String url,
-      String category) async {
+  addArticle(
+    String title,
+    String description,
+    String content,
+    String url,
+    String img,
+    String category,
+  ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString('token') ?? '';
     ArticleService articleService = ArticleService(token);
@@ -44,6 +62,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
       description,
       content,
       url,
+      img,
       category,
     );
   }
@@ -53,7 +72,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
     _titleController.dispose();
     _descriptionController.dispose();
     _contentController.dispose();
-    _UrlController.dispose();
+    _urlController.dispose();
 
     super.dispose();
   }
@@ -186,7 +205,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                     ),
                     const SizedBox(height: 20),
                     TextField(
-                      controller: _UrlController,
+                      controller: _urlController,
                       decoration: InputDecoration(
                         hintText: 'Makale URL',
                         hintStyle: const TextStyle(
@@ -231,22 +250,78 @@ class _AddArticlePageState extends State<AddArticlePage> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: _img == ''
+                              ? const Icon(
+                                  Icons.image,
+                                  size: 150,
+                                  color: Colors.black54,
+                                )
+                              : Image.file(
+                                  File(_img),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        Semantics(
+                          label: 'Resim Seç',
+                          child: TextButton(
+                            onPressed: () async {
+                              final XFile? image = await getImage();
+                              if (image != null) {
+                                setState(() {
+                                  _img = image.path;
+                                });
+                              }
+                            },
+                            style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                  const Size(140, 75)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  secondaryDarkBlueClr),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                            ),
+                            child: const Text(
+                              'Resim Seç',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontFamily: 'Nunito-Black',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 40),
                     TextButton(
                       onPressed: () async {
-                        await createArticle(
+                        await addArticle(
                           _titleController.text,
                           _descriptionController.text,
                           _contentController.text,
-                          _UrlController.text,
+                          _urlController.text,
+                          _img,
                           dropdownValue,
                         );
 
                         _titleController.clear();
                         _descriptionController.clear();
                         _contentController.clear();
-                        _UrlController.clear();
+                        _urlController.clear();
                         dropdownValue = categories.first;
+                        _img = '';
 
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -318,6 +393,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),

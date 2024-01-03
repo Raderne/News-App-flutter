@@ -20,7 +20,7 @@ class MyClient extends http.BaseClient {
 }
 
 class AuthService {
-  String URL = 'https://192.168.1.102:5000/api/auth';
+  String URL = 'https://10.4.10.159:5000/api/auth';
   http.Client client = MyClient();
 
   Future<UserModel> login(String email, String password) async {

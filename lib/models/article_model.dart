@@ -4,6 +4,7 @@ class ArticleModel {
   String? title;
   String? description;
   String? url;
+  String? img;
   String? content;
   String? category;
 
@@ -14,6 +15,7 @@ class ArticleModel {
     this.description,
     this.content,
     this.url,
+    this.img,
     this.category,
   });
 
@@ -26,6 +28,7 @@ class ArticleModel {
       description: json['description'],
       content: json['content'],
       url: json['url'],
+      img: json['img'],
       category: json['category'],
     );
   }

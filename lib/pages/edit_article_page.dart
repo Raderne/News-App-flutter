@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:haber/constants/categories.dart';
 import 'package:haber/constants/colors.dart';
 import 'package:haber/constants/routes.dart';
 import 'package:haber/models/article_model.dart';
 import 'package:haber/services/article_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const List<String> categories = categoriesList;
@@ -15,6 +18,7 @@ class EditArticlePage extends StatefulWidget {
   final String? description;
   final String? content;
   final String? url;
+  final String? image;
   final String? category;
 
   const EditArticlePage({
@@ -25,6 +29,7 @@ class EditArticlePage extends StatefulWidget {
     this.description,
     this.content,
     this.url,
+    this.image,
     this.category,
   });
 
@@ -41,6 +46,14 @@ class _EditArticlePageState extends State<EditArticlePage> {
   late String _dropdownValue;
   ArticleModel article = ArticleModel();
 
+  String _img = "";
+
+  Future<XFile?> getImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    return image;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,8 +61,9 @@ class _EditArticlePageState extends State<EditArticlePage> {
     _descriptionController = TextEditingController(text: widget.description);
     _contentController = TextEditingController(text: widget.content);
     _urlController = TextEditingController(text: widget.url);
-
     _dropdownValue = widget.category!;
+
+    _img = widget.image!;
   }
 
   @override
@@ -67,6 +81,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
     String description,
     String content,
     String url,
+    String img,
     String category,
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -78,6 +93,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
       description,
       content,
       url,
+      img,
       category,
     );
   }
@@ -89,7 +105,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.85,
+          height: MediaQuery.of(context).size.height * 0.83,
           decoration: BoxDecoration(
             color: const Color(0xffF5F5F5),
             borderRadius: const BorderRadius.all(
@@ -116,8 +132,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
                   fontFamily: "Nunito-Black",
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  height: 2,
-                  letterSpacing: 4,
+                  letterSpacing: 2,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -258,6 +273,60 @@ class _EditArticlePageState extends State<EditArticlePage> {
                         _dropdownValue = value!;
                       }),
                     ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: _img == ''
+                              ? const Icon(
+                                  Icons.image,
+                                  size: 150,
+                                  color: Colors.black54,
+                                )
+                              : Image.file(
+                                  File(_img),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        Semantics(
+                          label: 'Resim Seç',
+                          child: TextButton(
+                            onPressed: () async {
+                              final XFile? image = await getImage();
+                              if (image != null) {
+                                setState(() {
+                                  _img = image.path;
+                                });
+                              }
+                            },
+                            style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                  const Size(140, 75)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  secondaryDarkBlueClr),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                            ),
+                            child: const Text(
+                              'Resim Seç',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontFamily: 'Nunito-Black',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 40),
                     TextButton(
                       onPressed: () async {
@@ -267,6 +336,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
                           _descriptionController.text,
                           _contentController.text,
                           _urlController.text,
+                          _img,
                           _dropdownValue,
                         );
 
@@ -346,6 +416,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
